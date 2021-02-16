@@ -1,0 +1,319 @@
+<ion-header> <ion-navbar> <ion-title>
+ {{newAccount ? "اديب " : "جديد حساب تسجيل/> {{"ion-title> </ion-navbar> </ion-header>
+<ion-content no-bounce style="background-image:url(assets/imgs/backgrounds/x.jpg); background-size: cover; background-position: center
+bottom; background-repeat: no-repeat;">
+ <div text-center style="height:100%; background:rgba(255,255,255,.10);"> <img src="assets/imgs/logo.png" style="width:140px; height:120px;">
+ <div padding *ngIf="!newAccount">
+ <ion-item> <ion-input type="email" rows="1" placeholder="اإللكتروني بريدك "text-center [(ngModel)]="loginData.email"> </ion-input>
+ </ion-item> <br>
+ <ion-item> <ion-input type="password" placeholder="بك الخاصة المرور كلمة "text-center [(ngModel)]="loginData.password">
+ </ion-input></ion-item> <br>
+<button ion-button margin-bottom block round color="light" style="border:2px solid black;" (click)="login()">الدخول تسجيل/> button>
+<button ion-button margin-bottom small round style="background:rgba(240, 52, 52, .7);" (click)="resetPassword()">المرور؟ كلمة نسيت هل/> button>
+<br> <button ion-button margin-bottom block round color="primary" style="border:2px solid black;" (click)="newAccount=true">
+<br> <button </او قم بتسجيل حساب جديد
+
+<ion-fab center > <button ion-fab color="warning" (click)="navCtrl.push(HomePage)"> <ion-icon name="add"></ion-icon>
+ </button> </ion-fab> </div>
+<div padding *ngIf="newAccount">
+<ion-item> <ion-input placeholder="المستخدم اسم "text-center [(ngModel)]="registerData.username"> </ion-input></ion-item> <br>
+<ion-item> <ion-input type="email" placeholder="االلكتروني البريد "text-center style="border:10px" [(ngModel)]="registerData.email"> </ion-input>
+</ion-item> <br> <ion-item> <ion-input type="password" placeholder="المرور كلمة "text-center [(ngModel)]="registerData.password">
+</ion-input> </ion-item>
+
+ <br> <ion-item> <ion-input type="date" text-center min="2015-01-01" max="2030-12-31" value="2015-01-01" >
+[(ngModel)]="loginData.date"> </ion-input>
+ </ion-item> <br> <button ion-button margin-bottom block round color="blue" style="border:2px solid black;" (click)="register()">
+ حساب تسجيل/> button> </div> </div> </ion-content>
+ import { Component } from '@angular/core';
+import { NavController, NavParams } from 'ionic-angular';
+import { AppProvider } from '../../providers/app/app';
+import { HomePage } from "../home/home";
+@Component({
+ selector: 'page-login',
+ templateUrl: 'login.html', })
+export class LoginPage {
+HomePage = HomePage;
+ newAccount=false;
+ forgotPassword=false;
+ loginData={
+ email:"",
+ password: "" }
+ registerData={
+ email:"",
+ password:"",
+ username:"",
+date: "",}
+ constructor(
+ public navCtrl: NavController,
+ public navParams: NavParams,
+ public appProvider: AppProvider, ) { }}
+ ionViewDidLoad() { console.log('ionViewDidLoad LoginPage'); }
+ login(){
+ let email = this.loginData.email.trim();
+ let password = this.loginData.password;
+ if(!email){
+email=""; }
+if(!password){ password=""; }
+email=email.toLowerCase();
+this.appProvider.showLoading();
+setTimeout(_=>{
+this.appProvider.firebase.auth().signInWithEmailAndPassword(email, password).then(_=>{
+this.appProvider.hideLoading();
+ this.navCtrl.setRoot(HomePage); }).catch( error => {
+this.appProvider.hideLoading();
+this.loginData.password="";
+{;(750'); }); },حدث خطأ','لم يتم تسجيل الدخول بنجاح')showAlert.appProvider.this
+ resetPassword(){ const prompt = this.appProvider.alertCtrl.create({
+} ] :inputs", يرجى ادخال البريد االلكتروني" :message', استعادة كلمة المرور' :title
+type: 'email', name: 'email', placeholder: 'االلكتروني البريد,[ ,{ '
+ buttons: [ {
+ text: 'الغاء ,'handler: data => { }},
+ { text: 'استعادة,'handler: data => {
+ this.appProvider.showLoading();
+ setTimeout(() => { this.appProvider.firebase.auth().sendPasswordResetEmail(data.email).then(_=>{
+ this.appProvider.hideLoading();
+({ ;("تم االرسال", "تم ارسال رابط استعادة كلمة المرور الى البريد االلكتروني الخاص بك بنجاح")showAlert.appProvider.this
+.catch(error=>{
+this.appProvider.hideLoading();
+;({ [ { { ;(حدث خطأ", "لم يتم االرسال بنجاح يرجى اعادة المحاولة "(; {(; {, 052("showAlert.appProvider.this
+ prompt.present(); }
+register(){
+let email = this.registerData.email.trim(); let password = this.registerData.password; let username =
+this.registerData.username.trim();
+this.appProvider.showLoading();
+setTimeout(() => {
+if(!email || !password || !username){
+this.appProvider.hideLoading();
+this.appProvider.showAlert('البيانات جميع ملئ يرجى','خطأ حدث ;('return; } this.appProvider.afd.list("users",{
+query:{ orderByChild:"username",
+equalTo:username } }).take(1).subscribe(users=>{
+if(users.length){
+this.appProvider.hideLoading();
+;('حدث خطأ','اسم المستخدم موجود سابقا')showAlert.appProvider.this
+}else{ this.appProvider.firebase.auth().createUserWithEmailAndPassword(email, password).then(user=>{
+setTimeout(_=>{ this.appProvider.firebase.database().ref('users/' + user.uid).set({
+ username: username, temp_email: email }).then(_=>{ this.appProvider.hideLoading(); }); },250); })
+.catch( error => { this.appProvider.hideLoading(); this.appProvider.showAlert('052 ,};)}};)} ;)'بنجاح التسجيل يتم لم','خطأ حدث{;(
+ skip(){
+ this.navCtrl.setRoot(HomePage);
+ this.appProvider.firstStart=false; } }
+ <ion-header > </ion-header>
+<ion-content no-bounce [style.background-image]="appProvider.myStory.bg" style="background-size: cover;
+background-position: center bottom; background-repeat: no-repeat;">
+<ion-row text-row style="height:100%;">
+ <ion-col col-12 text-center style="margin-bottom:auto;">
+ <h2 class="text" *ngFor="let text of appProvider.myStory.texts; let i=index" (dblclick)="popText(i)">
+ <b> {{text}} </b> </h2> </ion-col>
+<ion-col col-12 style="margin-top:auto;">
+<img ngDraggable class="character" *ngFor="let char of appProvider.myStory.characters; let i=index"
+(dblclick)="popCharacter(i)" [src]="char" >
+</ion-col> </ion-row>
+<ion-fab right top>
+<button ion-fab color="blue" *ngIf="recording" (click)="stop()">
+<ion-icon name="md-pause"></ion-icon> </button>
+<button ion-fab color="blue" *ngIf="!recording" (click)="record()">
+<ion-icon name="videocam"></ion-icon> </button> </ion-fab>
+ <ion-fab left top *ngIf="!recording">
+<button ion-fab margin-bottom (click)="pushText()" color="light" >العنوان/> button>
+<button ion-fab margin-bottom (click)="navCtrl.push(HomeBackgroundsPage)" color="light" >خلفيات/> button>
+<button ion-fab margin-bottom (click)="navCtrl.push(HomeCharactersPage)" color="light" >شخصيات/> button>
+<button ion-fab margin-bottom (click)="changeMusic()" color="light" >أصوات/> button> </ion-fab>
+<ion-fab right bottom *ngIf="!recording">
+ <button ion-fab mini color="light" (click)="reset()">
+ <ion-icon name="refresh-outline"></ion-icon> </button>
+ <button ion-fab (click)="navCtrl.push(StoriesPage)" color="blue" >مكتبتي/> button> </ion-fab>
+</ion-content> <ion-footer> </ion-footer>
+78
+import { Component } from '@angular/core';
+import { NavController, AlertController } from 'ionic-angular';
+import { AppProvider } from '../../providers/app/app';
+import { StoriesPage } from '../stories/stories';
+import { HomeBackgroundsPage } from '../home-backgrounds/home-backgrounds';
+import { HomeCharactersPage } from '../home-characters/home-characters';
+declare let startApp: any;
+export const myConst = {
+ recordApp: {
+ android: { storeUrl: 'market://details?id=com.ayomi.screenrec', appId: 'com.ayomi.screenrec' } } }
+@Component({
+ selector: 'page-home',
+ templateUrl: 'home.html' })
+export class HomePage {
+ StoriesPage = StoriesPage;
+ HomeBackgroundsPage = HomeBackgroundsPage;
+ HomeCharactersPage = HomeCharactersPage;
+ audio: any;
+ recording=false;
+constructor(
+ public navCtrl: NavController,
+ public appProvider: AppProvider,
+ public alertCtrl: AlertController, ) { }
+ loadMusic(src) {
+ if(this.audio){
+ this.audio.pause(); }
+ this.audio = new Audio();
+ this.audio.src = src;
+ this.audio.load();
+ this.audio.play();
+ this.audio.loop = true;}
+ ionViewDidEnter(){ }
+ ionViewWillLeave(){
+ this.appProvider.myStory.music="";
+ this.loadMusic(this.appProvider.myStory.music);}
+changeMusic(){
+ if(this.appProvider.myStory.music==""){ this.appProvider.myStory.music="assets/musics/rain4.mp3";}
+else if(this.appProvider.myStory.music=="assets/musics/rain4.mp3"){
+this.appProvider.myStory.music="assets/musics/sea65.mp3";}
+else if(this.appProvider.myStory.music=="assets/musics/sea65.mp3"){
+this.appProvider.myStory.music="assets/musics/birds.mp3";}
+else{ this.appProvider.myStory.music="";}
+ this.loadMusic(this.appProvider.myStory.music);}
+ popCharacter(i){3
+ this.appProvider.myStory.characters.splice(i, 1); }
+ pushText(){ const prompt = this.alertCtrl.create({
+,'اكتب عنوان لقصتك' :title
+ inputs: [ { name: 'text', }, ],
+buttons: [ { text: 'إحفظ ,'handler: data => { if(data.text.trim()){
+this.appProvider.myStory.texts.push(data.text.trim()); } } } ] });
+ prompt.present(); }
+popText(i){this.appProvider.myStory.texts.splice(i, 1); }}
+record(){
+ if(this.appProvider.platform.is('android')){
+ let appId = myConst.recordApp.android.appId;
+ let appStarter = startApp.set({ "application": appId });
+ appStarter.start( (msg) => {
+ this.recording=true;},
+ (err) => {
+ this.appProvider.showAlert("","التسجيل فشل;("
+ this.recording=false;
+ window.open(myConst.recordApp.android.storeUrl, '_system');
+ });}
+else{
+ this.appProvider.showAlert("","التسجيل فشل;("
+ this.recording=false; } }
+ stop(){
+ this.recording=false;}
+ reset(){
+ window.location.reload() }
+ import { Component, ViewChild } from '@angular/core';
+import { NavController, NavParams, Slides } from 'ionic-angular';
+import { AppProvider } from '../../providers/app/app';
+@Component({
+ selector: 'page-home-backgrounds', templateUrl: 'home-backgrounds.html', })
+
+export class HomeBackgroundsPage {
+@ViewChild("slides1") slides1: Slides; interval = null;
+ backgrounds=[
+{ value:"assets/imgs/backgrounds/11.jpg", url:"url(assets/imgs/backgrounds/11.jpg)" },
+{ value:"assets/imgs/backgrounds/22.jpg", url:"url(assets/imgs/backgrounds/22.jpg)" },
+{ value:"assets/imgs/backgrounds/33.jpg", url:"url(assets/imgs/backgrounds/33.jpg)"},
+{ value:"assets/imgs/backgrounds/44.jpg", url:"url(assets/imgs/backgrounds/44.jpg)"}
+{ value:"assets/imgs/backgrounds/55.jpg",url:"url(assets/imgs/backgrounds/55.jpg)"}, ]
+ constructor( public navCtrl: NavController, public navParams: NavParams, public appProvider: AppProvider, ) {
+ this.interval = setInterval(_=>{ try{ this.slides1.update(); catch{e=>{ }} },750); }
+ ionViewDidLoad() { console.log('ionViewDidLoad HomeBackgroundsPage'); }
+ ionViewWillUnload(){ clearInterval(this.interval); }
+changeBackground(bg){ this.appProvider.myStory.bg=bg;} }
+import { Component, ViewChild } from '@angular/core';
+import { NavController, NavParams, Slides } from 'ionic-angular';
+import { AppProvider } from '../../providers/app/app';
+@Component({ selector: 'page-home-characters', templateUrl: 'home-characters.html', })
+export class HomeCharactersPage { @ViewChild("slides1") slides1: Slides; interval = null;
+ characters = [ "assets/imgs/characters/10.png", "assets/imgs/characters/1.png", "assets/imgs/characters/2.png",
+"assets/imgs/characters/3.png", "assets/imgs/characters/4.png", "assets/imgs/characters/5.png",
+"assets/imgs/characters/6.png", "assets/imgs/characters/7.png","assets/imgs/characters/8.png",
+"assets/imgs/characters/9.png", ];
+ constructor( public navCtrl: NavController, public navParams: NavParams, public appProvider: AppProvider, ) {
+ this.interval = setInterval(_=>{ try{ this.slides1.update(); }catch{e=>{ }} },750); }
+ ionViewDidLoad() { console.log('ionViewDidLoad HomeCharactersPage'); }
+ ionViewWillUnload(){ clearInterval(this.interval) }
+ pushCharacter(char){ this.appProvider.myStory.characters.push(char); }}
+ import { Component } from '@angular/core';
+import { NavController, NavParams } from 'ionic-angular';
+import { AppProvider } from '../../providers/app/app';
+@Component({ selector: 'page-stories-view', templateUrl: 'stories-view.html' })
+export class StoriesViewPage { item:any={
+ description:"", video:"", public: false, image:"", date:"" };
+ constructor( public navCtrl: NavController, public navParams: NavParams,
+ public appProvider: AppProvider, ) { if(navParams.get("item")!=null){ this.item = navParams.get("item"); } }
+ ionViewDidLoad() {
+ console.log('ionViewDidLoad StoriesViewPage'); }}
+ <ion-header> <ion-navbar> <ion-title> قصتك هاهي/> ion-title> </ion-navbar> </ion-header>
+<ion-content no-bounce style="background-image:url(assets/imgs/backgrounds/x.jpg); background-size: cover;
+background-position: center bottom; background-repeat: no-repeat;">
+ <div style="height:100%; background:rgba(255,255,255,.1);">
+ <video class="video-element" [poster]="item?.image ? item?.image : ''" [src]="item?.video ? item?.video : ''"
+type="video/mp4" autobuffer="true" controls="true"> </video>
+<b> <ion-fab middle left > <button ion-fab>مشاركة/>button>
+ <ion-fab-list side="right">
+ <button ion-fab fab-fixed color="primary"><ion-icon name="logo-facebook"></ion-icon></button>
+ <button ion-fab fab-fixed color="danger" ><ion-icon name="logo-googleplus"></ion-icon></button>
+ <button ion-fab fab-fixed color="secondary"><ion-icon name="logo-twitter"></ion-icon></button>
+<button ion-fab fab-fixed color="danger"><ion-icon name="logo-youtube"></ion-icon></button>
+ </ion-fab-list> </ion-fab> </b> </div> </ion-content>
+ <ion-header no-border> <ion-navbar><ion-title> الخاصة مكتبتي/> ion-title>
+<ion-buttons right> <button ion-button icon-only (click)="goToSettings()">
+ <ion-icon name="settings"></ion-icon> </button> </ion-buttons> </ion-navbar>
+ <div class="segmentX"> <ion-segment [(ngModel)]="option" (ionChange)="loadData(option)">
+ <ion-segment-button value="all"> العامة القصص/>ion-segment-button>
+ <ion-segment-button value="mine"> قصصي/>ion-segment-button> </ion-segment> </div> </ion-header>
+<ion-content no-bounce style="background-image:url(assets/imgs/backgrounds/x.jpg); background-size: cover;
+background-position: center bottom; background-repeat: no-repeat;">
+ <div class="addButtonDiv">
+ <button ion-button block round color="light" (click)="add()">
+<div> </button </إضافة قصة جديدة
+<ion-list> <ion-item-sliding dir="rtl" *ngFor="let item of stories"> <ion-item no-padding>
+ <ion-thumbnail item-start (click)="view(item)"> <img [src]="item.image"> </ion-thumbnail>
+ <div (click)="view(item)" padding-left>
+ <h2> {{item.description}} </h2> <p> {{appProvider.fullDateTime(item.date)}} </p> </div>
+ <div item-end> <button ion-button icon-start color="gray" *ngIf="appProvider.user?.admin ||
+appProvider.user?.uid == item.uid" (click)="edit(item)">
+<button </تعديل قصتي
+ <button ion-button dir="ltr" icon-start color="danger" *ngIf="appProvider.user?.admin ||
+appProvider.user?.uid == item.uid" (click)="delete(item)">
+ ازالة/> button> </div> </ion-item> </ion-item-sliding> </ion-list> </ion-content>
+ import { Component, ViewChild, ElementRef } from '@angular/core';
+import { NavController, NavParams } from 'ionic-angular';
+import { AppProvider } from '../../providers/app/app';
+declare let window: any;
+@Component({ selector: 'page-stories-add-edit', templateUrl: 'stories-add-edit.html', })
+export class StoriesAddEditPage {
+@ViewChild('videoElement') videoElement: ElementRef; @ViewChild('canvasElement') canvasElement:
+ElementRef;
+ item:any={ description:"", video:"", public: false, image:"", };
+constructor( public navCtrl: NavController, public navParams: NavParams, public appProvider: AppProvider, ) {
+ if(navParams.get("item")!=null){ this.item = navParams.get("item");} }
+ ionViewDidLoad() {
+ console.log('ionViewDidLoad StoriesAddEditPage'); }
+selectFile($event){
+let video = $event.target.files[0];
+if(video){ this.appProvider.showLoading();
+this.item.video=video;
+let reader = new FileReader();
+reader.onload = (ev:any) => { let videoData = ev.target.result; this.item.video.videoData = videoData;
+ this.capture(); } reader.readAsDataURL(video);}}
+capture() { setTimeout(() => { var video = this.videoElement.nativeElement; video.currentTime = 1;
+ setTimeout(() => { var canvas = document.createElement('canvas'); canvas.width = video.videoWidth;
+canvas.height = video.videoHeight; canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth,
+video.videoHeight);
+
+import { Injectable } from '@angular/core';
+import { Platform, App, AlertController, LoadingController, ToastController } from 'ionic-angular';
+import { Storage } from '@ionic/storage';
+import { AngularFireDatabase } from 'angularfire2/database';
+import 'rxjs/add/operator/take';
+import Firebase from 'firebase';
+import moment from 'moment'; //npm install moment --save
+@Injectable()
+export class AppProvider {moment = moment; firebase = Firebase; loader:any=null; alert:any=null; firstStart=true;
+user=null;
+ myStory:any={ bg:"url(assets/imgs/backgrounds/bg3.gif)", music:"", texts:[], characters:[] , }
+constructor( public platform: Platform, public app: App, public toastCtrl: ToastController,public afd:
+AngularFireDatabase,
+ public storage: Storage, public loadingCtrl: LoadingController, public alertCtrl: AlertController) {
+ console.log('Hello AppProvider Provider'); }
+showAlert(title, subTitle){
+ this.alert = this.alertCtrl.create({title: title,subTitle: subTitle,buttons: [ 'موافق;({ ['
+ this.alert.present();} hideAlert(){ if(this.alert!=null){ this.alert.dismiss();}}
+
+ 
